@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <main>
-    <router-view></router-view>
-  </main>
+  <router-view />
 </template>
+
+<style>
+#app,
+:root,
+html,
+body {
+  height: 100%;
+}
+</style>
