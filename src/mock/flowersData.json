@@ -1,0 +1,114 @@
+[
+  {
+    "month": 1,
+    "name": "개나리",
+    "meaning": "재회의 기쁨",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩20,000 - ₩50,000",
+    "tips": "개나리는 밝은 분위기를 선호합니다."
+  },
+  {
+    "month": 1,
+    "name": "물망초",
+    "meaning": "변치 않는 사랑",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩15,000 - ₩45,000",
+    "tips": "물망초는 실내외에서 잘 자랍니다."
+  },
+  {
+    "month": 2,
+    "name": "매화",
+    "meaning": "고결한 아름다움",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩30,000 - ₩60,000",
+    "tips": "매화는 추운 날씨에도 잘 견디며, 일찍 피는 꽃입니다."
+  },
+  {
+    "month": 3,
+    "name": "벚꽃",
+    "meaning": "순수한 마음",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩25,000 - ₩55,000",
+    "tips": "벚꽃은 봄의 상징이며, 화려한 꽃망울을 자랑합니다."
+  },
+  {
+    "month": 4,
+    "name": "진달래",
+    "meaning": "겸손",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩20,000 - ₩50,000",
+    "tips": "진달래는 산과 들에 자생하는 꽃으로, 관리가 쉽습니다."
+  },
+  {
+    "month": 5,
+    "name": "장미",
+    "meaning": "사랑",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩30,000 - ₩70,000",
+    "tips": "장미는 다양한 색상과 향기로 사랑받는 꽃입니다."
+  },
+  {
+    "month": 6,
+    "name": "장미",
+    "meaning": "열정",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩30,000 - ₩70,000",
+    "tips": "장미는 정원에서 잘 자라며, 정기적인 가지치기가 필요합니다."
+  },
+  {
+    "month": 7,
+    "name": "해바라기",
+    "meaning": "숭배",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩20,000 - ₩40,000",
+    "tips": "해바라기는 햇빛을 많이 받아야 잘 자랍니다."
+  },
+  {
+    "month": 8,
+    "name": "해바라기",
+    "meaning": "행복",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩20,000 - ₩40,000",
+    "tips": "해바라기는 큰 꽃이 특징이며, 물을 충분히 주어야 합니다."
+  },
+  {
+    "month": 9,
+    "name": "국화",
+    "meaning": "고귀함",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩15,000 - ₩45,000",
+    "tips": "국화는 가을에 피며, 다양한 색상과 형태가 있습니다."
+  },
+  {
+    "month": 10,
+    "name": "철쭉",
+    "meaning": "절제된 사랑",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩25,000 - ₩55,000",
+    "tips": "철쭉은 산성 토양에서 잘 자라며, 밝은 반음지를 선호합니다."
+  },
+  {
+    "month": 11,
+    "name": "코스모스",
+    "meaning": "순정",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩10,000 - ₩30,000",
+    "tips": "코스모스는 키가 크고, 가을에 아름답게 피는 꽃입니다."
+  },
+  {
+    "month": 12,
+    "name": "은방울꽃",
+    "meaning": "희망",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩15,000 - ₩35,000",
+    "tips": "은방울꽃은 겨울에도 피어나는 작고 예쁜 꽃입니다."
+  },
+  {
+    "month": 12,
+    "name": "목련",
+    "meaning": "고상한 아름다움",
+    "imageUrl": "/path/to/image",
+    "priceRange": "₩40,000 - ₩80,000",
+    "tips": "목련은 크고 화려한 꽃으로, 초기에 충분한 관리가 필요합니다."
+  }
+]
