@@ -1,11 +1,54 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { initFlowbite } from 'flowbite'
 
 const isProgressModalOpen = ref(false)
 const isDragOver = ref(false)
+const isSliderDragging = ref(false)
 const limitImageCount = 8
-const workingImages = ref<any[]>([])
+const workingImages = ref<any[]>(['icon.png', 'img.png'])
+const sliderPosition = ref(50)
+
+// 슬라이더 위치에 따른 스타일 계산
+const sliderStyle = computed(() => {
+  return {
+    left: `${sliderPosition.value}%`
+  };
+});
+
+const beforeRightStyle = computed(() => {
+  return {
+    right: `${100 - sliderPosition.value}%`
+  };
+});
+
+// 드래그 이벤트 처리
+const handleSliderDown = (eveent: MouseEvent) => {
+  isSliderDragging.value = true;
+  window.addEventListener('mouseup', handleSliderUp);
+}
+const handleSliderUp = (event: MouseEvent) => {
+  isSliderDragging.value = false;
+  console.log('handleSliderUp')
+  window.removeEventListener('mouseup', handleSliderUp);
+}
+const handleSliderMove = (event: MouseEvent) => {
+  if (!isSliderDragging.value)
+    return;
+
+  const imageComparer = event.currentTarget as HTMLElement;
+  if (imageComparer.id != 'image-comparer') {
+    console.warn('not image-comparer')
+    return
+  }
+
+  const boundingRect = imageComparer.getBoundingClientRect();
+  const x = event.clientX - boundingRect.left; // 클릭한 지점 계산
+  const width = 512
+  const newPosition = (x / width) * 100;
+  sliderPosition.value = Math.max(0, Math.min(100, newPosition)); // 0과 100 사이로 제한
+  console.log('x:', x, 'boundingRect.left:', boundingRect.left, 'newPosition:', newPosition)
+};
 
 const handleFileChange = (event: Event) => {
   const files = (event.target as HTMLInputElement).files || (event as DragEvent).dataTransfer?.files;
@@ -137,27 +180,30 @@ onMounted(() => {
       <div class="spinner spinner-primary"></div>
     </div>
   </div>
-  <div v-if="workingImages.length > 1" name="image-slider" class="text-center p-2 select-none">
-    <div class="relative inline-block mx-auto border-2 border-slate-600 rounded-xl">
+  <div v-if="workingImages.length > 1" id="image-slider" class="text-center p-2 select-none">
+    <div id="image-comparer" class="relative inline-block border-2 border-slate-600 rounded-xl"
+      @mousemove="handleSliderMove" @mouseup="handleSliderUp">
       <div class="absolute left-2 bottom-2 z-20">desc...</div>
       <div class="absolute right-2 bottom-1 z-20 flex gap-1">
         <button class="bg-white p-2 rounded-full">+</button>
         <button class="bg-white p-2 rounded-full">full</button>
       </div>
       <!-- slider -->
-      <div name="slider" class="absolute top-0 bottom-0 right-[calc(50%-1px)] z-20 w-0.5 bg-white/50" style="">
+      <div id="slider" class="absolute top-0 bottom-0 right-[calc(50%-1px)] z-20 w-0.5 bg-white/50"
+        :style="sliderStyle">
         <button
-          class="absolute -left-1 top-[calc(50%-24px)] p-0 m-0 border-white border-4 w-2.5 h-12 bg-gray-300 hover:bg-gray-400 cursor-ew-resize"></button>
+          class="absolute -left-1 top-[calc(50%-24px)] p-0 m-0 border-white border-4 w-2.5 h-12 bg-gray-300 hover:bg-gray-400 cursor-ew-resize"
+          @mousedown="handleSliderDown"></button>
         <div class="absolute -left-4 top-0">1</div>
         <div class="absolute left-4 top-0">2</div>
       </div>
       <!-- before -->
-      <div class="absolute z-10 overflow-hidden left-0 top-0 bottom-0 right-1/2">
-        <img :src="workingImages[0]" alt="image" class="box-image h-full max-w-full rounded-xl object-left" />
+      <div class="absolute z-10 overflow-hidden left-0 top-0 bottom-0 right-1/2" :style="beforeRightStyle">
+        <img :src="workingImages[0]" alt="image" class="box-image h-full max-w-full rounded-l-xl object-left" />
       </div>
       <!-- after -->
       <img :src="workingImages[1]" alt="image"
-        class="box-image w-full max-h-[calc(100vh - 100px)] rounded-xl z-9 object-cover" />
+        class="box-image w-full max-h-[calc(100vh - 100px)] rounded-r-xl z-9 object-cover" />
     </div>
   </div>
 </template>
