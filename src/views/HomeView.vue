@@ -44,7 +44,7 @@ const handleSliderMove = (event: MouseEvent) => {
 
   const boundingRect = imageComparer.getBoundingClientRect();
   const x = event.clientX - boundingRect.left; // 클릭한 지점 계산
-  const width = 512
+  const width = boundingRect.width
   const newPosition = (x / width) * 100;
   sliderPosition.value = Math.max(0, Math.min(100, newPosition)); // 0과 100 사이로 제한
   console.log('x:', x, 'boundingRect.left:', boundingRect.left, 'newPosition:', newPosition)
@@ -119,28 +119,65 @@ onMounted(() => {
 
 <template>
   <main class="mx-auto max-w-screen-xl flex flex-col gap-4 p-12 justify-center overflow-auto">
-    <h1 class="text-xl font-bold">Image Slider<span class="font-normal text-sm">, compare your image with overlay
-        view</span>
-    </h1>
-    <div class="flex flex-col justify-center items-center">
-      <label for="dropzone-file"
-        class="group/dropzone w-full flex flex-col items-center justify-center rounded-xl border-dashed border-4 border-slate-300 bg-slate-200 hover:bg-slate-300 hover:border-slate-400"
-        :class="isDragOver ? 'border-slate-400 bg-slate-300' : ''" @dragover="handleDragOver" @drop="handleDrop"
-        @dragleave="handleDragLeave">
-        <svg class="w-1/2 h-1/2 group-hover/dropzone:text-slate-400"
-          :class="isDragOver ? 'text-slate-400' : 'text-slate-300'" aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-          <path fill-rule="evenodd" d="M13 10a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H14a1 1 0 0 1-1-1Z" clip-rule="evenodd" />
-          <path fill-rule="evenodd"
-            d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12c0 .556-.227 1.06-.593 1.422A.999.999 0 0 1 20.5 20H4a2.002 2.002 0 0 1-2-2V6Zm6.892 12 3.833-5.356-3.99-4.322a1 1 0 0 0-1.549.097L4 12.879V6h16v9.95l-3.257-3.619a1 1 0 0 0-1.557.088L11.2 18H8.892Z"
-            clip-rule="evenodd" />
-        </svg>
-        <p class="text-center">Click to upload or drag and drop</p>
-        <p class="text-center">SVG, PNG, JPG or GIF</p>
-        <input id="dropzone-file" type="file" accept="image/*" multiple class="hidden" @change="handleFileChange" />
-      </label>
+    <!-- main -->
+    <div class="flex gap-5">
+      <!-- input forms -->
+      <div class="flex-1">
+        <h1 class="text-xl font-bold">Image Slider<span class="font-normal text-sm">, compare your image with overlay
+            view</span>
+        </h1>
+        <div class="flex flex-col justify-center items-center">
+          <label for="dropzone-file"
+            class="group/dropzone w-full flex flex-col items-center justify-center rounded-xl border-dashed border-4 border-slate-300 bg-slate-200 hover:bg-slate-300 hover:border-slate-400"
+            :class="isDragOver ? 'border-slate-400 bg-slate-300' : ''" @dragover="handleDragOver" @drop="handleDrop"
+            @dragleave="handleDragLeave">
+            <svg class="w-1/2 h-1/2 group-hover/dropzone:text-slate-400"
+              :class="isDragOver ? 'text-slate-400' : 'text-slate-300'" aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M13 10a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H14a1 1 0 0 1-1-1Z"
+                clip-rule="evenodd" />
+              <path fill-rule="evenodd"
+                d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12c0 .556-.227 1.06-.593 1.422A.999.999 0 0 1 20.5 20H4a2.002 2.002 0 0 1-2-2V6Zm6.892 12 3.833-5.356-3.99-4.322a1 1 0 0 0-1.549.097L4 12.879V6h16v9.95l-3.257-3.619a1 1 0 0 0-1.557.088L11.2 18H8.892Z"
+                clip-rule="evenodd" />
+            </svg>
+            <p class="text-center">Click to upload or drag and drop</p>
+            <p class="text-center">SVG, PNG, JPG or GIF</p>
+            <input id="dropzone-file" type="file" accept="image/*" multiple class="hidden" @change="handleFileChange" />
+          </label>
+        </div>
+      </div>
+
+      <!-- previewer -->
+      <div v-if="workingImages.length > 1" id="image-slider" class="flex-1/3 text-center p-2 select-none">
+        <h1>Preview</h1>
+        <div id="image-comparer" class="relative inline-block border-2 border-slate-600 rounded-xl"
+          @mousemove="handleSliderMove" @mouseup="handleSliderUp">
+          <div class="absolute left-2 bottom-2 z-20">desc...</div>
+          <div class="absolute right-2 bottom-1 z-20 flex gap-1">
+            <button class="bg-white p-2 rounded-full">+</button>
+            <button class="bg-white p-2 rounded-full">full</button>
+          </div>
+          <!-- slider -->
+          <div id="slider" class="absolute top-0 bottom-0 right-[calc(50%-1px)] z-20 w-0.5 bg-white/50"
+            :style="sliderStyle">
+            <button
+              class="absolute -left-1 top-[calc(50%-24px)] p-0 m-0 border-white border-4 w-2.5 h-12 bg-gray-300 hover:bg-gray-400 cursor-ew-resize"
+              @mousedown="handleSliderDown"></button>
+            <div class="absolute -left-4 top-0">1</div>
+            <div class="absolute left-4 top-0">2</div>
+          </div>
+          <!-- before -->
+          <div class="absolute z-10 overflow-hidden left-0 top-0 bottom-0 right-1/2" :style="beforeRightStyle">
+            <img :src="workingImages[0]" alt="image" class="box-image h-full max-w-full rounded-l-xl object-left" />
+          </div>
+          <!-- after -->
+          <img :src="workingImages[1]" alt="image"
+            class="box-image w-full max-h-[calc(100vh - 100px)] rounded-r-xl z-9 object-cover" />
+        </div>
+      </div>
     </div>
 
+    <!-- options -->
     <div v-show="workingImages.length > 0" class="bg-slate-300 rounded-xl p-4">
       <div class="flex justify-between items-center mb-4">
         <h1 class="font-bold text-xl">Your Images : ({{ workingImages.length }} / {{ limitImageCount }})</h1>
@@ -180,32 +217,7 @@ onMounted(() => {
       <div class="spinner spinner-primary"></div>
     </div>
   </div>
-  <div v-if="workingImages.length > 1" id="image-slider" class="text-center p-2 select-none">
-    <div id="image-comparer" class="relative inline-block border-2 border-slate-600 rounded-xl"
-      @mousemove="handleSliderMove" @mouseup="handleSliderUp">
-      <div class="absolute left-2 bottom-2 z-20">desc...</div>
-      <div class="absolute right-2 bottom-1 z-20 flex gap-1">
-        <button class="bg-white p-2 rounded-full">+</button>
-        <button class="bg-white p-2 rounded-full">full</button>
-      </div>
-      <!-- slider -->
-      <div id="slider" class="absolute top-0 bottom-0 right-[calc(50%-1px)] z-20 w-0.5 bg-white/50"
-        :style="sliderStyle">
-        <button
-          class="absolute -left-1 top-[calc(50%-24px)] p-0 m-0 border-white border-4 w-2.5 h-12 bg-gray-300 hover:bg-gray-400 cursor-ew-resize"
-          @mousedown="handleSliderDown"></button>
-        <div class="absolute -left-4 top-0">1</div>
-        <div class="absolute left-4 top-0">2</div>
-      </div>
-      <!-- before -->
-      <div class="absolute z-10 overflow-hidden left-0 top-0 bottom-0 right-1/2" :style="beforeRightStyle">
-        <img :src="workingImages[0]" alt="image" class="box-image h-full max-w-full rounded-l-xl object-left" />
-      </div>
-      <!-- after -->
-      <img :src="workingImages[1]" alt="image"
-        class="box-image w-full max-h-[calc(100vh - 100px)] rounded-r-xl z-9 object-cover" />
-    </div>
-  </div>
+
 </template>
 
 <style scoped>
