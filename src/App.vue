@@ -4,12 +4,3 @@
 <template>
   <router-view />
 </template>
-
-<style>
-#app,
-:root,
-html,
-body {
-  height: 100%;
-}
-</style>
