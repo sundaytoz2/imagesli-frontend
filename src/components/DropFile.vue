@@ -65,13 +65,22 @@ const handleFileChange = (event: Event) => {
         droppedFiles.value.push(file); // base64 인코딩된 이미지 데이터
         notify = true;
       }
+    }
 
-      if (notify) {
-        emits('changeDroppedFiles', droppedFiles.value);
-      }
+    if (notify) {
+      emits('changeDroppedFiles', droppedFiles.value);
     }
   }
 }
+
+const removeAllFiles = () => {
+  droppedFiles.value = [];
+  emits('changeDroppedFiles', droppedFiles.value);
+}
+
+defineExpose({
+  removeAllFiles,
+});
 
 </script>
 

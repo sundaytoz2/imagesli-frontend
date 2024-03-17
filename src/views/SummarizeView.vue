@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import DropFile from '@/components/DropFile.vue';
+import ImageComparer from '@/components/ImageComparer.vue';
 
 const isProgressModalOpen = ref(false);
 const workingImages = ref<any[]>([]);
@@ -22,7 +23,7 @@ const workingImages = ref<any[]>([]);
 
       <!-- previewer -->
       <div id="summarize" class="w-2/3 text-center p-2 select-none">
-        <h1 class="text-2xl font-bold">Preview</h1>
+        <ImageComparer></ImageComparer>
       </div>
     </div>
 
