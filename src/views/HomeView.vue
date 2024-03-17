@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { initFlowbite } from 'flowbite'
+import DropFile from '@/components/DropFile.vue';
 
 const isProgressModalOpen = ref(false)
-const isDragOver = ref(false)
 const isSliderDragging = ref(false)
 const limitImageCount = 8
 const workingImages = ref<any[]>(['icon.png', 'img.png'])
@@ -50,13 +50,8 @@ const handleSliderMove = (event: MouseEvent) => {
   console.log('x:', x, 'boundingRect.left:', boundingRect.left, 'newPosition:', newPosition)
 };
 
-const handleFileChange = (event: Event) => {
-  const files = (event.target as HTMLInputElement).files || (event as DragEvent).dataTransfer?.files;
+const handleFileChange = (files: File[]) => {
   if (files && files.length > 0) {
-    // const file = files[0];
-    // 파일 처리 로직
-    // console.log(file.name);
-    // for (const file of files) {
     for (let i = 0; i < files.length; i++) {
       if (i >= limitImageCount) {
         console.log('이미지는 최대 8개까지만 업로드 가능합니다.')
@@ -78,30 +73,6 @@ const handleFileChange = (event: Event) => {
   }
 }
 
-const handleDragOver = (event: DragEvent) => {
-  // console.log('handleDragOver', event)
-  event.preventDefault() // 파일이 드래그되었을 때 브라우저가 기본적으로 수행하는 동작을 방지
-  event.dataTransfer!.dropEffect = 'copy'
-  isDragOver.value = true;
-}
-
-const handleDrop = (event: DragEvent) => {
-  // console.log('handleDrop', event)
-  event.preventDefault() // 파일이 드래그되었을 때 브라우저가 기본적으로 수행하는 동작을 방지
-  handleFileChange(event)
-  isDragOver.value = false;
-}
-
-const handleDragLeave = (event: DragEvent) => {
-  const labelElement = event.currentTarget as HTMLLabelElement
-  if (!labelElement.contains(event.relatedTarget as Node)) {
-    event.preventDefault() // 파일이 드래그되었을 때 브라우저가 기본적으로 수행하는 동작을 방지
-    isDragOver.value = false;
-  } else {
-    console.log('drag inside')
-  }
-}
-
 const clickedSubmitComparison = () => {
   console.log('clickedSubmitComparison')
 
@@ -120,39 +91,24 @@ onMounted(() => {
 <template>
   <main class="mx-auto max-w-screen-xl flex flex-col gap-4 p-12 justify-center overflow-auto">
     <!-- main -->
-    <div class="flex gap-5">
+    <div class="flex gap-5 select-none">
       <!-- input forms -->
-      <div class="flex-1">
-        <h1 class="text-xl font-bold">Image Slider<span class="font-normal text-sm">, compare your image with overlay
-            view</span>
-        </h1>
-        <div class="flex flex-col justify-center items-center">
-          <label for="dropzone-file"
-            class="group/dropzone w-full flex flex-col items-center justify-center rounded-xl border-dashed border-4 border-slate-300 bg-slate-200 hover:bg-slate-300 hover:border-slate-400"
-            :class="isDragOver ? 'border-slate-400 bg-slate-300' : ''" @dragover="handleDragOver" @drop="handleDrop"
-            @dragleave="handleDragLeave">
-            <svg class="w-1/2 h-1/2 group-hover/dropzone:text-slate-400"
-              :class="isDragOver ? 'text-slate-400' : 'text-slate-300'" aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-              <path fill-rule="evenodd" d="M13 10a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H14a1 1 0 0 1-1-1Z"
-                clip-rule="evenodd" />
-              <path fill-rule="evenodd"
-                d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12c0 .556-.227 1.06-.593 1.422A.999.999 0 0 1 20.5 20H4a2.002 2.002 0 0 1-2-2V6Zm6.892 12 3.833-5.356-3.99-4.322a1 1 0 0 0-1.549.097L4 12.879V6h16v9.95l-3.257-3.619a1 1 0 0 0-1.557.088L11.2 18H8.892Z"
-                clip-rule="evenodd" />
-            </svg>
-            <p class="text-center">Click to upload or drag and drop</p>
-            <p class="text-center">SVG, PNG, JPG or GIF</p>
-            <input id="dropzone-file" type="file" accept="image/*" multiple class="hidden" @change="handleFileChange" />
-          </label>
-        </div>
+      <div class="w-2/3 p-2">
+        <DropFile @changeDroppedFiles="handleFileChange">
+          <template #header>
+            <h1 class="text-xl font-bold">Image Comparison<span class="ml-2 font-normal text-sm">Drop your images
+                here</span>
+            </h1>
+          </template>
+        </DropFile>
       </div>
 
       <!-- previewer -->
-      <div v-if="workingImages.length > 1" id="image-slider" class="flex-1/3 text-center p-2 select-none">
-        <h1>Preview</h1>
+      <div v-if="workingImages.length > 1" id="image-slider" class="w-1/3 text-center p-2 select-none">
+        <h1 class="text-2xl font-bold">Preview</h1>
         <div id="image-comparer" class="relative inline-block border-2 border-slate-600 rounded-xl"
           @mousemove="handleSliderMove" @mouseup="handleSliderUp">
-          <div class="absolute left-2 bottom-2 z-20">desc...</div>
+          <div class="absolute left-2 bottom-2 z-20">preview...</div>
           <div class="absolute right-2 bottom-1 z-20 flex gap-1">
             <button class="bg-white p-2 rounded-full">+</button>
             <button class="bg-white p-2 rounded-full">full</button>
@@ -191,7 +147,7 @@ onMounted(() => {
       <!-- grid or something -->
       <div class="bg-white p-4 rounded-xl columns-1 lg:columns-2 gap-4">
 
-        <div v-for="image, index in workingImages" :key="index" class="flex relative p-2">
+        <div v-for="    image, index     in     workingImages    " :key="index" class="flex relative p-2">
           <button class="absolute top-0 right-0 p-2 text-white bg-red-500 rounded-full"
             @click="workingImages.splice(index, 1)">X</button>
 
