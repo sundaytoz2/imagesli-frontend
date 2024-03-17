@@ -11,12 +11,17 @@ const workingImages = ref<any[]>([]);
     <!-- main -->
     <div class="flex gap-5 select-none">
       <!-- input forms -->
-      <div class="w-2/3 p-2">
-        <DropFile />
+      <div class="w-1/3 p-2">
+        <DropFile>
+          <template #header>
+            <h1>Yes</h1>
+          </template>
+        </DropFile>
+
       </div>
 
       <!-- previewer -->
-      <div id="summarize" class="w-1/3 text-center p-2 select-none">
+      <div id="summarize" class="w-2/3 text-center p-2 select-none">
         <h1 class="text-2xl font-bold">Preview</h1>
       </div>
     </div>
@@ -24,7 +29,7 @@ const workingImages = ref<any[]>([]);
     <!-- options -->
     <div class="bg-slate-300 rounded-xl p-4">
       <div class="flex justify-between items-center mb-4">
-        <h1 class="font-bold text-xl">Your Images : ( / )</h1>
+        <h1 class="font-bold text-xl">Your Files : ( / )</h1>
         <div class="flex gap-2">
           <button class="bg-green-200 border hover:bg-green-400 rounded-lg p-2">Upload</button>
           <button class="bg-red-200 border hover:bg-red-400 rounded-lg p-2">Remove
