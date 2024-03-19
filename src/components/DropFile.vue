@@ -97,9 +97,9 @@ defineExpose({
     </div>
 
     <!-- multiple file input form -->
-    <div class="flex flex-col justify-center items-center">
+    <div class="flex flex-col justify-center items-center select-none">
       <label for="dropzone-file"
-        class="group/dropzone w-full flex flex-col items-center justify-center rounded-xl border-dashed border-4 border-slate-300 bg-slate-200 hover:bg-slate-300 hover:border-slate-400"
+        class="group/dropzone w-full flex flex-col items-center justify-center rounded-xl border-dashed border-4 border-slate-300 bg-slate-200 hover:bg-slate-300 hover:border-slate-400 cursor-pointer"
         :class="isDragOver ? 'border-slate-400 bg-slate-300' : ''" @dragover="handleDragOver" @drop="handleDrop"
         @dragleave="handleDragLeave">
         <svg class="w-1/2 h-1/2 group-hover/dropzone:text-slate-400"
