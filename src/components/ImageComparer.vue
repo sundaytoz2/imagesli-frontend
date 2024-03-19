@@ -58,7 +58,7 @@ const handleSliderMove = (event: MouseEvent) => {
 
   <div id="image-slider" class="p-2 select-none">
     <slot name="header">
-      <h1 class="text-2xl font-bold">Preview</h1>
+      <h1 class="text-2xl font-bold">Sample</h1>
     </slot>
 
     <div id="image-comparer" class="relative inline-block border-2 border-slate-600 rounded-xl"
@@ -83,8 +83,16 @@ const handleSliderMove = (event: MouseEvent) => {
           class="box-image h-full max-w-full rounded-l-xl object-left object-cover" />
       </div>
       <!-- after -->
-      <img :src="props.images[1]" alt="image"
-        class="box-image w-full max-h-[calc(100vh - 100px)] rounded-r-xl z-9 object-cover" />
+      <img :src="props.images[1]" alt="image" class="box-image rounded-xl z-9 object-cover" />
     </div>
   </div>
 </template>
+
+<style scoped>
+.box-image {
+  display: block;
+  width: auto;
+  max-height: calc(50vh - 100px);
+  object-fit: cover;
+}
+</style>
