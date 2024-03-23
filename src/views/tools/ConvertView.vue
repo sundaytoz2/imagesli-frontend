@@ -1,22 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 
-const source = ref<string>()
-const dest = ref<string>()
+const source = ref<string>('');
+const dest = ref<string>('');
 
-const changedSource = () => {
-  alert('test')
-}
-
-const inputSource = () => { }
-
-function jsonToCsv(jsonArray: any[], excludeColumns: string[] = [], idType: 'sequential' | 'uuid' = 'sequential'): string {
+const jsonToCsv = (jsonArray: any[], excludeColumns: string[] = [], idType: 'sequential' | 'uuid' = 'sequential'): string => {
   let headers = Object.keys(jsonArray[0]).filter(key => !excludeColumns.includes(key));
   let idIndex = headers.indexOf('id');
 
   if (idType === 'uuid' && idIndex !== -1) {
-    // 'id'를 UUID로 대체
+    // 'id'를 'uuid'로 대체
     headers[idIndex] = 'uuid';
   }
 
@@ -38,36 +32,34 @@ function jsonToCsv(jsonArray: any[], excludeColumns: string[] = [], idType: 'seq
   });
 
   return [headerRow, ...rows].join('\r\n');
-}
+};
 
-// 예제 JSON 데이터
-const jsonData = [
-  { id: 1, name: 'Alice', email: 'alice@example.com' },
-  { id: 2, name: 'Bob', email: 'bob@example.com' }
-];
+const convertToJsonAndCsv = () => {
+  try {
+    // source.value에서 작은따옴표를 큰따옴표로 변환
+    let jsonString = source.value.replace(/'/g, '"');
 
-// JSON을 CSV로 변환 (id 열을 순차적으로 생성)
-const sequentialCsv = jsonToCsv(jsonData, [], 'sequential');
-console.log(sequentialCsv);
+    // 키 이름에 큰따옴표가 없는 경우, 큰따옴표로 묶기
+    jsonString = jsonString.replace(/(\w+):/g, '"$1":');
 
-// JSON을 CSV로 변환 (id 열을 UUID로 생성)
-const uuidCsv = jsonToCsv(jsonData, [], 'uuid');
-console.log(uuidCsv);
-
+    const jsonData = JSON.parse(jsonString);
+    dest.value = jsonToCsv(jsonData, [], 'sequential'); // 여기서 idType을 'uuid'로 설정하면 UUID를 사용할 수 있습니다.
+  } catch (e) {
+    alert('Invalid JSON');
+  }
+};
 </script>
 
 <template>
   <div class="flex h-screen p-20">
     <div class="w-1/2 bg-slate-300 rounded-lg p-4">
-      <textarea v-model="source" @change="changedSource" @input="inputSource"></textarea>
+      <textarea v-model="source" placeholder="Enter JSON here"></textarea>
     </div>
     <div class="w-64 flex flex-col justify-center items-center">
-      <div>
-        <button>to csv</button>
-      </div>
+      <button @click="convertToJsonAndCsv">to csv</button>
     </div>
     <div class="w-1/2 bg-slate-300 rounded-lg p-4">
-      <textarea v-model="dest"></textarea>
+      <textarea v-model="dest" placeholder="CSV will appear here"></textarea>
     </div>
   </div>
 </template>
