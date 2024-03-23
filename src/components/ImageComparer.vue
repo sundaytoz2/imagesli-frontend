@@ -64,10 +64,6 @@ const handleSliderMove = (event: MouseEvent) => {
     <div id="image-comparer" class="relative inline-block border-2 border-slate-600 rounded-xl"
       @mousemove="handleSliderMove" @mouseup="handleSliderUp">
       <div class="absolute left-2 bottom-2 z-20">preview...</div>
-      <div class="absolute right-2 bottom-1 z-20 flex gap-1">
-        <button class="bg-white p-2 rounded-full">+</button>
-        <button class="bg-white p-2 rounded-full">full</button>
-      </div>
       <!-- slider -->
       <div id="slider" class="absolute top-0 bottom-0 right-[calc(50%-1px)] z-20 w-0.5 bg-white/50"
         :style="sliderStyle">
