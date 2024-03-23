@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
+import { json } from 'stream/consumers';
 
 const source = ref<string>('');
 const dest = ref<string>('');
@@ -37,11 +38,15 @@ const jsonToCsv = (jsonArray: any[], excludeColumns: string[] = [], idType: 'seq
 const convertToJsonAndCsv = () => {
   try {
     // source.value에서 작은따옴표를 큰따옴표로 변환
-    let jsonString = source.value.replace(/'/g, '"');
+    let jsonString = source.value.trim()
+    jsonString = source.value.replace(/'/g, '"');
 
     // 키 이름에 큰따옴표가 없는 경우, 큰따옴표로 묶기
     jsonString = jsonString.replace(/(\w+):/g, '"$1":');
 
+    if (!jsonString.startsWith('[')) {
+      jsonString = `[${jsonString}]`;
+    }
     const jsonData = JSON.parse(jsonString);
     dest.value = jsonToCsv(jsonData, [], 'sequential'); // 여기서 idType을 'uuid'로 설정하면 UUID를 사용할 수 있습니다.
   } catch (e) {
